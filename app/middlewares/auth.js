@@ -13,9 +13,9 @@ const WithAuth = ( req, res, next ) => {
       if (err) {
         res.status(401).send('Não autorizado: token inválido');
       } else {
-        req.email = decoded.email;
+        req.crmv = decoded.crmv;
         User
-          .findOne({email: decoded.email })
+          .findOne({crmv: decoded.crmv })
           .then(user => {
             req.user = user
             next();
