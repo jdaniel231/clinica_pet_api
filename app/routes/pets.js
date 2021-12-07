@@ -29,12 +29,47 @@ router.get('/:id', withAuth, async(req, res) =>{
   }
 })
 
+router.put('/:id', withAuth, async(req, res) => {
+  const {  name, nameAnimal, animal_type, age, weight } = req.body;
+  const { id } = req.params;
+  
+  try {
+    let pet = await Pet.findById(id);
+    if(isOwner(req.user, pet)){
+      pet = await Pet.findByIdAndUpdate(id,
+        { $set: {name: name, nameAnimal: nameAnimal, animal_type: animal_type, age: age, weight: weight} },
+        { upsert: true, 'new': true }  
+      );
+      res.json(pet)
+    } else
+      res.status(403).json({error: 'Permissão negado'});
+  } catch (error) {
+    res.status(500).json({error: 'Problema para atualizar a pet'});
+  }
+})
+
 router.get('/', withAuth, async (req, res) => {
   try {
     let pets = await Pet.find({author: req.user._id })
     res.send(pets)
   } catch (error) {
     res.status(500).json({error: 'Problema para obter pet'});
+  }
+})
+
+router.delete('/:id', withAuth, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    let pet = await Pet.findById(id);
+    if(isOwner(req.user, pet)){
+      await pet.delete();
+      res.json({message: 'Excluido com sucesso!'}).status(204);
+    } else{
+      res.status(500).json({error: 'Problema para deletar pet'});
+    }
+  } catch (error) {
+    res.status(500).send(err);
   }
 })
 
