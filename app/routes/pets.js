@@ -25,7 +25,16 @@ router.get('/:id', withAuth, async(req, res) =>{
     else
     res.status(403).json({error: 'Permissão negado'});
   } catch (error) {
-    res.status(500).json({error: 'Problema para obter nota'});
+    res.status(500).json({error: 'Problema para obter pet'});
+  }
+})
+
+router.get('/', withAuth, async (req, res) => {
+  try {
+    let pets = await Pet.find({author: req.user._id })
+    res.send(pets)
+  } catch (error) {
+    res.status(500).json({error: 'Problema para obter pet'});
   }
 })
 
