@@ -57,6 +57,22 @@ router.get('/', withAuth, async (req, res) => {
   }
 })
 
+router.delete('/:id', withAuth, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    let pet = await Pet.findById(id);
+    if(isOwner(req.user, pet)){
+      await pet.delete();
+      res.json({message: 'Excluido com sucesso!'}).status(204);
+    } else{
+      res.status(500).json({error: 'Problema para deletar pet'});
+    }
+  } catch (error) {
+    res.status(500).send(err);
+  }
+})
+
 const isOwner = (user, pet) =>{
   if(JSON.stringify(user._id) == JSON.stringify(pet.author._id))
     return true;
