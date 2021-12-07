@@ -3,7 +3,7 @@ const secret = process.env.JWT_TOKEN;
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.js');
 
-const withAuth = ( req, res, next ) => {
+const WithAuth = ( req, res, next ) => {
   const token = req.headers['x-access-token'];
 
   if(!token) {

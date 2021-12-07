@@ -1,11 +1,11 @@
 var mongoose = require('mongoose');
 
 var petSchema = new mongoose.Schema({
-  title: String,
-  body: String,
+  name: String,
+  nameAnimal: String,
   animal_type: String,
   age: Number,
-  wheight: Number,
+  weight: Number,
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
   author: {
