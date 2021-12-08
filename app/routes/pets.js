@@ -16,6 +16,18 @@ router.post('/', withAuth, async function(req, res) {
 
 });
 
+router.get('/search', withAuth, async(req, res) => {
+  const { search_query } = req.query;
+  try {
+    let pets = await Pet
+      .find({ author: req.user._id })
+      .find({ $text: {$search: search_query }});
+    res.json(pets);
+  } catch (error) {
+    res.json({error: error}).status(500);
+  }
+});
+
 router.get('/:id', withAuth, async(req, res) =>{
   try {
     const { id } = req.params;

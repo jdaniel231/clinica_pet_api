@@ -15,4 +15,6 @@ var petSchema = new mongoose.Schema({
   }
 });
 
+petSchema.index({'nameAnimal': 'text'});
+
 module.exports = mongoose.model('Pet', petSchema);
